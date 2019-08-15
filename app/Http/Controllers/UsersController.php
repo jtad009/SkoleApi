@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper\ResponseBuilder;
 use App\Http\Helper\UploadHelper;
 use App\User ;
 use Illuminate\Http\Request;
@@ -24,11 +25,23 @@ class UsersController extends Controller
     public function add(Request $request){
         
         $request['api_token'] = uniqid(str_random(60));
-        $request['password'] = app('hash')->make($request['pasword']);
-        $request['image'] = UploadHelper::upload($_FILES['image']);
-        $user = User::create($request->all());
+        $pwd = app('hash')->make($request['pasword']);
         
-        return response()->json($user);
+        $user = new User;
+        $user->image = UploadHelper::upload($_FILES['image']);
+        $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->username = $request['username'];
+        $user->email = $request['email'];
+        $user->api_token = $request['api_token'];
+        $user->password = $pwd;
+        $user->article_count = 1;
+        $user->bio = $request['bio'];
+        if($user->save()){
+            return ResponseBuilder::result(200, 'User Saved', $user);
+        }
+        
+         return ResponseBuilder::result(201, 'User Not Saved', null);
     }
 
     //Edit Article

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Model\Article;
 use Illuminate\Http\Request;
 use App\Http\Helper\ResponseBuilder;
+use App\Http\Helper\UploadHelper;
+
 class ArticlesController extends Controller
 {
     /**
@@ -18,7 +20,17 @@ class ArticlesController extends Controller
 
     //Create Article
     public function add(Request $request){
-        $article = Article::create($request->all());
+        $article = new Article;
+        $article->title = $request->input('title');
+        $article->article = $request->input('article');
+        $article->published = $request->input('published');
+        $article->view_count = $request->input('view_count');
+        $article->user_id = $request->input('user_id');
+        $article->cover_image = UploadHelper::upload($_FILES('cover_image'));
+        $article->slug = str_replace(' ','-',$request->input('title'));
+        $article->category_id = $request->input('category_id');
+        $article->save();
+        
         return ResponseBuilder::result(200,'success', $article);
     }
 
@@ -47,13 +59,12 @@ class ArticlesController extends Controller
     //List all articles
     public function index(){
         $article = Article::all();
-        
         return  ResponseBuilder::result(200,'success', $article);
     }
 
     //view post
     public function view($id){
-        $article = Article::find($id);
+        $article = Article::find($id)->with('categories','users','comments')->get();
         return ResponseBuilder::result(200,'success', $article);
     }
 }

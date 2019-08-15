@@ -32,4 +32,7 @@ class User extends Model implements
     protected $hidden = [
         'password','remember_token', 'api_token'
     ];
+    public function articles(){
+        return $this->hasMany('App\Model\Article');
+    }
 }
