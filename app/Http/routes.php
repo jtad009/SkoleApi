@@ -28,7 +28,7 @@ $app->group(['prefix'=>'api/v1','namespace'=>'App\Http\Controllers'], function($
 
     //Users route
     // $app->group(['prefix'=>'users'], function($app){
-        $app->post('add', 'UsersController@add');
+        $app->post('users/add', 'UsersController@add');
         $app->get('all', 'UsersController@all');
         $app->get('view', 'UsersController@view');
     // });

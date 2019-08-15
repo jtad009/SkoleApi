@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Model\User ;
+
+use App\Http\Helper\UploadHelper;
+use App\User ;
 use Illuminate\Http\Request;
 use Illuminate\Hashing\BcryptHasher;
+
 
 class UsersController extends Controller
 {
@@ -19,9 +22,12 @@ class UsersController extends Controller
 
     //Create Article
     public function add(Request $request){
+        
         $request['api_token'] = uniqid(str_random(60));
         $request['password'] = app('hash')->make($request['pasword']);
+        $request['image'] = UploadHelper::upload($_FILES['image']);
         $user = User::create($request->all());
+        
         return response()->json($user);
     }
 
