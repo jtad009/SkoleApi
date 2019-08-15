@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Model\Article;
 use Illuminate\Http\Request;
+use App\Http\Helper\ResponseBuilder;
 class ArticlesController extends Controller
 {
     /**
@@ -18,7 +19,7 @@ class ArticlesController extends Controller
     //Create Article
     public function add(Request $request){
         $article = Article::create($request->all());
-        return response()->json($article);
+        return ResponseBuilder::result(200,'success', $article);
     }
 
     //Edit Article
@@ -33,25 +34,26 @@ class ArticlesController extends Controller
         $article->slug = $request->input('slug');
         $article->category_id = $request->input('category_id');
         $article->save();
-        return response()->json($article);
+        return ResponseBuilder::result(200,'success', $article);
     }
 
     //Delete Article
     public function delete($id){
         $article = Article::find($id);
         $article->delete();
-        return response()->json('Article Deleted');
+        return ResponseBuilder::result(200,'success', 'Article Deleted');
     }
 
     //List all articles
     public function index(){
         $article = Article::all();
-        return response()->json($article);
+        
+        return  ResponseBuilder::result(200,'success', $article);
     }
 
     //view post
     public function view($id){
         $article = Article::find($id);
-        return response()->json($article);
+        return ResponseBuilder::result(200,'success', $article);
     }
 }

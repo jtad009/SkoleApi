@@ -15,21 +15,21 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group(['prefix'=>'api/v1'], function($app){
+$app->group(['prefix'=>'api/v1','namespace'=>'App\Http\Controllers'], function($app){
     //Article Routes
-    $app->group(['prefix'=>'articles'], function($app){
+   // $app->group(['prefix'=>''], function($app){
         $app->post('add', 'ArticlesController@add');
-        $app->get('view/{id}', 'ArticlesController@view');
+        $app->get('articles/view/{id}', 'ArticlesController@view');
         $app->put('update/{id}', 'ArticlesController@edit');
         $app->delete('delete/{id}', 'ArticlesController@delete');
-        $app->get('all', 'ArticlesController@index');
-    });
+        $app->get('articles/all', 'ArticlesController@index');
+    //});
     
 
     //Users route
-    $app->group(['prefix'=>'users'], function($app){
+    // $app->group(['prefix'=>'users'], function($app){
         $app->post('add', 'UsersController@add');
         $app->get('all', 'UsersController@all');
         $app->get('view', 'UsersController@view');
-    });
+    // });
 });
