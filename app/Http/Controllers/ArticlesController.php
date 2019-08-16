@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Model\Article;
 use App\Model\Tag;
 use Illuminate\Http\Request;
@@ -8,6 +9,7 @@ use App\Http\Helper\ResponseBuilder;
 use App\Http\Helper\UploadHelper;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class ArticlesController extends Controller
 {
     /**
@@ -19,7 +21,7 @@ class ArticlesController extends Controller
     {
         //
     }
-    
+
     /**
      * Generate a random UUID version 4
      *
@@ -52,7 +54,8 @@ class ArticlesController extends Controller
         );
     }
     //Create Article
-    public function add(Request $request){
+    public function add(Request $request)
+    {
         $article = new Article;
         $article->id = $this->uuid();
         $article->title = $request->input('title');
@@ -61,69 +64,71 @@ class ArticlesController extends Controller
         $article->view_count = $request->input('view_count');
         $article->user_id = $request->input('user_id');
         $article->cover_image = UploadHelper::upload($_FILES["cover_image"], 'blog');
-        $article->slug = str_replace(' ','-',$request->input('title'));
+        $article->slug = str_replace(' ', '-', $request->input('title'));
         $article->category_id = $request->input('category_id');
-        if($article->save()){
+        if ($article->save()) {
             $tags = Tag::find($request->input('tag_id'));
             $article->tags()->attach($tags);
-            
-            return ResponseBuilder::result(200,'success', $article);
+
+            return ResponseBuilder::result(200, 'success', $article);
         }
-        return ResponseBuilder::result(201,'Error saving article', $article);
+        return ResponseBuilder::result(201, 'Error saving article', $article);
     }
 
     //Edit Article
-    public function edit(Request $request, $id){
-        $article = Article::find($id);
-        
-        $article->title = $request->input('title');
-        $article->article = $request->input('article');
-        $article->published = $request->input('published');
-        $article->view_count = $request->input('view_count');
-        $article->user_id = $request->input('user_id');
-        $article->cover_image = UploadHelper::upload($_FILES["cover_image"], 'blog');
-        $article->slug = str_replace(' ','-',$request->input('title'));
-        $article->category_id = $request->input('category_id');
-        if($article->save()){
-            return ResponseBuilder::result(200,'success', $article);
+    public function edit(Request $request, $id)
+    {
+        try {
+            $article = Article::findOrFail($id);
+
+            $article->title = $request->input('title');
+            $article->article = $request->input('article');
+            $article->published = $request->input('published');
+            $article->view_count = $request->input('view_count');
+            $article->user_id = $request->input('user_id');
+            $article->cover_image = UploadHelper::upload($_FILES["cover_image"], 'blog');
+            $article->slug = str_replace(' ', '-', $request->input('title'));
+            $article->category_id = $request->input('category_id');
+            if ($article->save()) {
+                return ResponseBuilder::result(200, 'success', $article);
+            }
+            return ResponseBuilder::result(201, 'Error saving data', $article);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) { 
+            return response()->json(ResponseBuilder::result(404, 'Not Found', $e->getMessage()), 404);
         }
-        return ResponseBuilder::result(201,'Error saving data', $article);
-        
     }
 
     //Delete Article
-    public function delete($id){
-        $article = Article::find($id);
-          
-            if(!is_null($article)){
-                $article->delete();
-                return ResponseBuilder::result(200,'success', 'Article Deleted');
-            }
-          
-         return response()->json([
-            'message' => 'Error deleting this article, article not found','status'=>404], 404);
-
-        
-        
-        
+    public function delete($id)
+    {
+        try {
+            $article = Article::findOrFail($id);
+            $article->delete();
+            return response()->json(ResponseBuilder::result(200, 'success', 'Article Deleted'), 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(
+                ResponseBuilder::result(404, 'Not Found', $e->getMessage()),
+                404
+            );
+        }
     }
 
     //List all articles
-    public function index(){
+    public function index()
+    {
         $article = Article::all();
-        return  ResponseBuilder::result(200,'success', $article);
+        return response()->json(ResponseBuilder::result(200, 'success', $article), 200);
     }
 
     //view post
-    public function view($id){
-        try{
-            $article = Article::find($id)->with('categories','users','comments','tags')->get();
+    public function view($id)
+    {
+        try {
+            $article = Article::findOrFail($id)->with('categories', 'users', 'comments', 'tags')->get();
             // dd($id);
-            return ResponseBuilder::result(200,'success', $article);
-        }catch (\Symfony\Component\Debug\Exception\FatalErrorException $e) {
-            
-            return ResponseBuilder::result(404,'success', $e->getMessage());
+            return response()->json(ResponseBuilder::result(200, 'success', $article), 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(ResponseBuilder::result(404, 'Not Found', $e->getMessage()), 404);
         }
-       
     }
 }

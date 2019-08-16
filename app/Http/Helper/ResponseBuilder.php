@@ -6,7 +6,7 @@ class ResponseBuilder {
     public static function result($status = "", $information = "", $data=""){
         return [
             'status'=>$status,
-            'info'=>$information,
+            'message'=>$information,
             'data'=>$data
         ];
     }
