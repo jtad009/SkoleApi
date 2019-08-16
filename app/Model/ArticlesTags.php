@@ -3,7 +3,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 
 class ArticlesTags extends Model{
-    // protected $table = 'articles_tags';
+    protected $table = 'article_tag';
     protected $fillable =['article_id','tag_id'];
 
     public function articles(){
