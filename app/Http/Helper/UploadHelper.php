@@ -9,7 +9,7 @@ class UploadHelper{
      * @return string
      * @throws InternalErrorException
      */
-    public static function upload($data) {
+    public static function upload($data, $blog="user") {
         // dd($data);
         $allowed = array('png', 'jpg','jpeg','pdf','doc','docx','xls','xlsx','ppt','csv');
         if (!in_array(substr(strrchr($data['name'], '.'), 1), $allowed)):
@@ -17,7 +17,15 @@ class UploadHelper{
         elseif (is_uploaded_file($data['tmp_name'])) :
             $filename = uniqid() . '-' . $data['name'];
             //echo $filename;
-            move_uploaded_file($data['tmp_name'], '../public/uploads/'. $filename);
+            switch($blog){
+                case 'blog':
+                    move_uploaded_file($data['tmp_name'], '../public/uploads/blog/'. $filename);
+                break;
+                case 'user':
+                    move_uploaded_file($data['tmp_name'], '../public/uploads/'. $filename);
+                break;
+            }
+            
         endif;
         return $filename;
     }

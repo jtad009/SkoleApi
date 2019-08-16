@@ -14,22 +14,33 @@
 $app->get('/', function () use ($app) {
     return $app->version();
 });
+$app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers', 'middleware' => 'auth'], function () use ($app) {
+    $app->post('articles/edit/{id}', 'ArticlesController@edit');
+    $app->delete('articles/delete/{id}', 'ArticlesController@delete');
+    $app->post('articles/add', 'ArticlesController@add');
+    $app->get('users/view/{id}', 'UsersController@view');
+    $app->get('users/all', 'UsersController@index');
+    $app->get('users/view/{id}/articles', 'UsersController@viewWithArticles');
 
-$app->group(['prefix'=>'api/v1','namespace'=>'App\Http\Controllers'], function($app){
+    $app->post('comments/add', 'CommentsController@add');
+    $app->delete('comments/delete/{id}', 'CommentsController@delete');
+
+    $app->post('categories/add', 'CategoriesController@add');
+    $app->post('categories/edit/{id}', 'CategoriesController@edit');
+    $app->get('categories/view/{id}', 'CategoriesController@view');
+    $app->get('categories/all', 'CategoriesController@index');
+
+    $app->post('tags/add', 'TagsController@add');
+    $app->post('tags/edit/{id}', 'TagsController@edit');
+    $app->get('tags/view/{id}', 'TagsController@view');
+    $app->get('tags/all', 'TagsController@index');
+});
+
+$app->group(['prefix' => 'api/v1', 'namespace' => 'App\Http\Controllers'], function ($app) {
     //Article Routes
-   // $app->group(['prefix'=>''], function($app){
-        $app->post('add', 'ArticlesController@add');
-        $app->get('articles/view/{id}', 'ArticlesController@view');
-        $app->put('update/{id}', 'ArticlesController@edit');
-        $app->delete('delete/{id}', 'ArticlesController@delete');
-        $app->get('articles/all', 'ArticlesController@index');
-    //});
+    $app->get('articles/view/{id}', 'ArticlesController@view');
+    $app->get('articles/all', 'ArticlesController@index');
     
-
     //Users route
-    // $app->group(['prefix'=>'users'], function($app){
-        $app->post('users/add', 'UsersController@add');
-        $app->get('all', 'UsersController@all');
-        $app->get('view', 'UsersController@view');
-    // });
+    $app->post('users/add', 'UsersController@add');
 });

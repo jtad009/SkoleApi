@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Model\Tag;
+
+use Illuminate\Http\Request;
+use App\Http\Helper\ResponseBuilder;
 
 class TagsController extends Controller
 {
@@ -13,6 +17,41 @@ class TagsController extends Controller
     {
         //
     }
+    public function add(Request $request){
+        $Tag = new Tag;
+        $Tag->tag = $request['tag'];
+        // $Tag->article_count = 0;
+        if($Tag->save()){
+            return ResponseBuilder::result(200,'Tag Saved', $Tag);
+        }
+        return ResponseBuilder::result(201,'Error saving Tag' );
+    }
+    public function edit(Request $request, $id){
+        $Tag =  Tag::find($id);
+        $Tag->tag = $request['tag'];
+        // $Tag->article_count = 0;
+        if($Tag->save()){
+            return ResponseBuilder::result(200,'Tag Updated', $Tag);
+        }
+        return ResponseBuilder::result(201,'Error updating Tag' );
+    }
 
+    public function view($id){
+        // dd($id);
+        $Tag =  Tag::find($id)->with('articles')->get();
+        
+        if($Tag != null){
+            return ResponseBuilder::result(200,'Tags', $Tag);
+        }
+        return ResponseBuilder::result(201,'Tag not found' );
+    }
+
+    public function index(){
+        $tags = Tag::all();
+        if($tags != null){
+            return ResponseBuilder::result(200,'Tags', $tags);
+        }
+        return ResponseBuilder::result(201,'Tag not found' );
+    }
     //
 }

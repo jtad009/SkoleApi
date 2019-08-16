@@ -14,7 +14,7 @@ class CreateTableArticles extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             // $table->increments('id');
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->string('title');
             $table->integer('category_id');
 
@@ -27,7 +27,7 @@ class CreateTableArticles extends Migration
             $table->string('comment_count')->default(0);
             $table->boolean('published')->default(false);
             $table->timestamps();
-            $table->primary('id');
+            
             // $table->foreign('user_id')->references('id')->on('users');//FK
             // $table->foreign('category_id')->references('id')->on('categories');//FK
         });
