@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Storage;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use App\Http\Helper\UploadHelper;
 class ArticleTest extends TestCase
 {
+    private $uuid = null;
     public function setUp()
     {
-        parent::setUp();
+        $this->uuid = 1;
+        
         // echo public_path('uploads/5d553a80f0a00-israel.png');
         $_FILES = [
             'cover_image' => [
@@ -19,6 +19,7 @@ class ArticleTest extends TestCase
                 'error' => 0
             ]
         ];
+        parent::setUp();
     }
     /**
      * List all articles.
@@ -96,7 +97,7 @@ class ArticleTest extends TestCase
                 'view_count' => '1',
                 'user_id' => 1,
                 'tag_id' => 1,
-                'id'=>'e7be075f-1c22-41cd-bc24-cd7c399a92b8'
+                'id'=>$this->uuid
 
             ],
             ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
@@ -113,7 +114,7 @@ class ArticleTest extends TestCase
         $title = 'Helpp me sir';
         $this->json(
             'post',
-            'api/v1/articles/edit/d9fcea07-c32c-48e9-bb56-1c19651ccef6',
+            'api/v1/articles/edit/'.$this->uuid,
             [
                 'title' => $title,
                 'slug' => str_replace(' ', '-', $title),
@@ -141,7 +142,7 @@ class ArticleTest extends TestCase
         $title = 'Helpp me sir';
         $this->json(
             'post',
-            'api/v1/articles/edit/d9fcea07-c32c-48e9-bb56-1c19651ccef6',
+            'api/v1/articles/edit/'.$this->uuid,
             [
                 'title' => $title,
                 'slug' => str_replace(' ', '-', $title),
@@ -184,7 +185,7 @@ class ArticleTest extends TestCase
         //Delete article with right ID
         $this->json(
             'delete',
-            'api/v1/articles/delete/e7be075f-1c22-41cd-bc24-cd7c399a92b8',
+            'api/v1/articles/delete/'.$this->uuid,
             [],
             ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
         )->seeStatusCode(200)->seeJsonEquals(['message' => 'success', 'status' => 200,'data'=>'Article Deleted']);
@@ -192,7 +193,7 @@ class ArticleTest extends TestCase
         //Fails to delete article with  invalid article ID
         $this->json(
             'delete',
-            'api/v1/articles/delete/e7be075f-1c22-41cd-bc24-cd7c399a92b8',
+            'api/v1/articles/delete/'.$this->uuid,
             [],
             ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
         )->seeStatusCode(404)->seeJsonEquals(['message' => 'Not Found', 'status' => 404,'data'=>"No query results for model [App\\Model\\Article]."]);

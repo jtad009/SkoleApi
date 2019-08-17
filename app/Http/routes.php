@@ -28,7 +28,7 @@ $app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers', 'middle
     $app->post('categories/add', 'CategoriesController@add');
     $app->post('categories/edit/{id}', 'CategoriesController@edit');
     $app->get('categories/view/{id}', 'CategoriesController@view');
-    $app->get('categories/all', 'CategoriesController@index');
+    
 
     $app->post('tags/add', 'TagsController@add');
     $app->post('tags/edit/{id}', 'TagsController@edit');
@@ -43,4 +43,5 @@ $app->group(['prefix' => 'api/v1', 'namespace' => 'App\Http\Controllers'], funct
     
     //Users route
     $app->post('users/add', 'UsersController@add');
+    $app->get('categories/all', 'CategoriesController@index');
 });

@@ -143,22 +143,5 @@ public function testViewArticleByUnathenticatedUser(){
         )->seeStatusCode(401)->seeJsonEquals(['message' => 'Unauthorized.', 'status' => 401]);
     }
 
-    // public function testDeleteArticle()
-    // {
-    //     //Delete article with right ID
-    //     $this->json(
-    //         'delete',
-    //         'api/v1/categories/delete/1',
-    //         [],
-    //         ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
-    //     )->seeStatusCode(200)->seeJsonEquals(['message' => 'success', 'status' => 200,'data'=>'Catogory Deleted']);
-
-    //     //Fails to delete article with  invalid article ID
-    //     $this->json(
-    //         'delete',
-    //         'api/v1/categories/delete/1',
-    //         [],
-    //         ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
-    //     )->seeStatusCode(404)->seeJsonEquals(['message' => 'Not Found', 'status' => 404,'data'=>"No query results for model [App\\Model\\Category]."]);
-    // }
+ 
 }

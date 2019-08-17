@@ -15,27 +15,35 @@ class CategoriesController extends Controller
         $category->category = $request['category'];
         $category->article_count = 0;
         if($category->save()){
-            return ResponseBuilder::result(200,'Category Saved', $category);
+            return response()->json(ResponseBuilder::result(200,'Category Saved', $category), 200);
         }
-        return ResponseBuilder::result(201,'Error saving category' );
+        return response()->json(ResponseBuilder::result(201,'Error saving category' ), 201);
     }
     public function edit(Request $request, $id){
-        $category =  Category::find($id);
+        try{
+            $category =  Category::findOrFail($id);
         $category->category = $request['category'];
         $category->article_count = 0;
         if($category->save()){
-            return ResponseBuilder::result(200,'Category Updated', $category);
+            return response()->json(ResponseBuilder::result(200,'Category Updated', $category), 200);
         }
-        return ResponseBuilder::result(201,'Error updating category' );
+        return response()->json(ResponseBuilder::result(201,'Error updating category') , 201);
+    }catch(ModelNotFoundException $e){
+        return response()->json(ResponseBuilder::result(404,'Category not found.', $e->getMessage()) , 404);
+    }
+        
     }
 
     public function view($id){
-        $category =  Category::find($id)->with('articles','articles.tags','articles.comments')->where('id',$id)->get();
+        try{
+            $category =  Category::findOrFail($id)->with('articles','articles.tags','articles.comments')->where('id',$id)->get();
         
         if($category != null){
-            return ResponseBuilder::result(200,'Categories', $category);
+            return response()->json( ResponseBuilder::result(200,'Categories', $category),  200);
         }
-        return ResponseBuilder::result(201,'Category not found' );
+    }catch(ModelNotFoundException $e){
+        return response()->json(ResponseBuilder::result(404,'Category not found.',$e->getMessage()) , 404);
+    }
     }
 
     public function index(){
@@ -46,4 +54,3 @@ class CategoriesController extends Controller
         return ResponseBuilder::result(201,'Category not found' );
     }
 }
-?>
