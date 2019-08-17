@@ -56,6 +56,8 @@ class ArticlesController extends Controller
     //Create Article
     public function add(Request $request)
     {
+        // dd($request->input('cover_image'));
+        // dd($_FILES);
         $article = new Article;
         $article->id = $this->uuid();
         $article->title = $request->input('title');
@@ -66,13 +68,14 @@ class ArticlesController extends Controller
         $article->cover_image = UploadHelper::upload($_FILES["cover_image"], 'blog');
         $article->slug = str_replace(' ', '-', $request->input('title'));
         $article->category_id = $request->input('category_id');
+       
         if ($article->save()) {
             $tags = Tag::find($request->input('tag_id'));
             $article->tags()->attach($tags);
 
-            return ResponseBuilder::result(200, 'success', $article);
+            return response()->json(ResponseBuilder::result(200, 'Article Saved', $article), 200);
         }
-        return ResponseBuilder::result(201, 'Error saving article', $article);
+        return response()->json(ResponseBuilder::result(201, 'Error saving article', $article), 201);
     }
 
     //Edit Article

@@ -47,7 +47,16 @@ $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
 );
+$app->singleton('filesystem', function($app){
+return $app->loadComponent('filesystems', 'Illuminate\Filesystem\FilesystemServiceProvider', 'filesystem');
+});
+$app->singleton('filesystem.disk', function () {
+    return $this->app['filesystem']->disk($this->getDefaultDriver());
+});
 
+$app->singleton('filesystem.cloud', function () {
+    return $this->app['filesystem']->disk($this->getCloudDriver());
+});
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -77,7 +86,7 @@ $app->routeMiddleware([
 | totally optional, so you are not required to uncomment this line.
 |
 */
-
+$app->configure('filesystems');
 // $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
