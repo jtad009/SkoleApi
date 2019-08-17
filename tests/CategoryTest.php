@@ -50,7 +50,7 @@ class CategoryTest extends TestCase
                 'data' => ['*' => ['category', 'article_count', 'articles' => ['*' => ['article', 'comments']]]]
             ]);
     }
-    public function testViewArticleWithWrongId(){
+    public function testViewCategoryWithWrongId(){
         //handles when wrong article id is set
         $this->json('get',
             'api/v1/categories/view/0',
@@ -63,7 +63,7 @@ class CategoryTest extends TestCase
                 "data" => "No query results for model [App\\Model\\Category]."
             ]);
     }
-public function testViewArticleByUnathenticatedUser(){
+public function testViewCategoryByUnathenticatedUser(){
     ///Test for unauthenticted users
     $this->json('get','api/v1/categories/view/10', [])
     ->seeStatusCode(401)

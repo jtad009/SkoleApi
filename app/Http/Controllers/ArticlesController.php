@@ -7,6 +7,7 @@ use App\Model\Tag;
 use Illuminate\Http\Request;
 use App\Http\Helper\ResponseBuilder;
 use App\Http\Helper\UploadHelper;
+use App\Model\Category;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -42,7 +43,11 @@ class ArticlesController extends Controller
         if ($article->save()) {
             $tags = Tag::find($request->input('tag_id'));
             $article->tags()->attach($tags);
-
+            $articleCount = Article::where('category_id',$article->category_id)->get()->count();
+            // dd($articleCount);
+            $c = Category::find($article->category_id);
+            $c->article_count = $articleCount;
+            $c->update();
             return response()->json(ResponseBuilder::result(200, 'Article Saved', $article), 200);
         }
         return response()->json(ResponseBuilder::result(201, 'Error saving article', $article), 201);

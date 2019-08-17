@@ -4,20 +4,20 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class CategoryTest extends TestCase
+class TagsTest extends TestCase
 {
     public function setUp()
     {
         parent::setUp();
     }
     /**
-     * List all articles.
+     * List all Tags.
      *
      * @return void
      */
     public function testCategoryListAll()
     {
-        $this->get('/api/v1/categories/all', []);
+        $this->get('/api/v1/tags/all', []);
         $this->seeStatusCode(200);
 
         $this->seeJsonStructure([
@@ -26,8 +26,8 @@ class CategoryTest extends TestCase
             'data' => [
                 '*' => [
                     'id',
-                    'category',
-                    'article_count',
+                    'tag',
+                    
                     'created_at',
                     'updated_at'
                 ]
@@ -37,9 +37,9 @@ class CategoryTest extends TestCase
     public function testViewCategoryById()
     {
         
-        // //paases when the correct article id is passed
+        // //paases when the correct Tags id is passed
          $this->json('get',
-            'api/v1/categories/view/1',
+            'api/v1/tags/view/1',
             [],
             ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
         )
@@ -47,25 +47,25 @@ class CategoryTest extends TestCase
             ->seeJsonStructure([
                 'status',
                 'message',
-                'data' => ['*' => ['category', 'article_count', 'articles' => ['*' => ['article', 'comments']]]]
+                'data' => ['*' => ['tag', 'articles' => ['*' => ['categories', 'comments']]]]
             ]);
     }
-    public function testViewArticleWithWrongId(){
-        //handles when wrong article id is set
+    public function testViewTagsWithWrongId(){
+        //handles when wrong Tags id is set
         $this->json('get',
-            'api/v1/categories/view/0',
+            'api/v1/tags/view/0',
             [],
             ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
         )->seeStatusCode(404)
             ->seeJsonEquals([
-                'message' => "Category not found.",
+                'message' => "Tag not found",
                 'status' => 404,
-                "data" => "No query results for model [App\\Model\\Category]."
+                "data" => "No query results for model [App\\Model\\Tag]."
             ]);
     }
-public function testViewArticleByUnathenticatedUser(){
+public function testViewTagsByUnathenticatedUser(){
     ///Test for unauthenticted users
-    $this->json('get','api/v1/categories/view/10', [])
+    $this->json('get','api/v1/tags/view/10', [])
     ->seeStatusCode(401)
     ->seeJsonEquals([
         'message' => "Unauthorized.",
@@ -73,35 +73,34 @@ public function testViewArticleByUnathenticatedUser(){
 
     ]);
 }
-    public function testAddCategory()
+    public function testAddTag()
     {
 
         //Make Authorized request
         $title = str_random(5);
         $this->json(
             'post',
-            'api/v1/categories/add',
+            'api/v1/tags/add',
             [
-                'category' => $title,
-                'article_count' => 0,
-
+                'tag' => $title,
+                
             ],
-            ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
+            ['api_token' => 'OvaFVhgsv5JP1NJ5Do213dkMW3PQF7VgvRiGoYUJ3967f9ygDdvCzv6LpBwH5d56d692bfc48']
         )->seeStatusCode(200)->seeJsonStructure(['status', 'data', 'message']);
     }
 
-    public function testAddArticleUnauthorise()
+    public function testAddTagUnauthorise()
     {
         $title = 'Helpp me sir';
         $this->json(
             'post',
-            'api/v1/categories/add',
+            'api/v1/tags/add',
             [
                 'category' => $title,
-                'article_count' => 0,
+                'Tags_count' => 0,
 
             ],
-            ['api_tokens' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
+            ['api_tokens' => 'OvaFVhgsv5JP1NJ5Do213dkMW3PQF7VgvRiGoYUJ3967f9ygDdvCzv6LpBwH5d56d692bfc48']
         )->seeStatusCode(401)->seeJsonEquals(['message' => 'Unauthorized.', 'status' => 401]);
     }
 
@@ -113,13 +112,11 @@ public function testViewArticleByUnathenticatedUser(){
         $title = 'Tessters';
         $this->json(
             'post',
-            'api/v1/categories/edit/1',
+            'api/v1/tags/edit/2',
             [
-                'category' => $title,
-                'article_count' => 0,
-
-            ],
-            ['api_token' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']
+                'tag' => $title,
+             ],
+            ['api_token' => 'OvaFVhgsv5JP1NJ5Do213dkMW3PQF7VgvRiGoYUJ3967f9ygDdvCzv6LpBwH5d56d692bfc48']
 
         )->seeStatusCode(200)->seeJsonStructure(['status', 'data', 'message']);
     }
@@ -133,10 +130,10 @@ public function testViewArticleByUnathenticatedUser(){
         $this->json(
             'post',
 
-            'api/v1/categories/edit/1',
+            'api/v1/tags/edit/2',
             [
-                'category' => $title,
-                'article_count' => 0,
+                'tag' => $title,
+                
 
             ],
             ['api_tokens' => '3Y1DtvpXvSfgZGfi4CEmvhWzyQwGk1o6NKPUBfmminMTfgthY0F6Nv21uurJ5d56d692bac60']

@@ -33,7 +33,7 @@ $app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers', 'middle
     $app->post('tags/add', 'TagsController@add');
     $app->post('tags/edit/{id}', 'TagsController@edit');
     $app->get('tags/view/{id}', 'TagsController@view');
-    $app->get('tags/all', 'TagsController@index');
+    
 });
 
 $app->group(['prefix' => 'api/v1', 'namespace' => 'App\Http\Controllers'], function ($app) {
@@ -44,4 +44,5 @@ $app->group(['prefix' => 'api/v1', 'namespace' => 'App\Http\Controllers'], funct
     //Users route
     $app->post('users/add', 'UsersController@add');
     $app->get('categories/all', 'CategoriesController@index');
+    $app->get('tags/all', 'TagsController@index');
 });
