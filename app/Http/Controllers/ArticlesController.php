@@ -27,7 +27,7 @@ class ArticlesController extends Controller
     //Create Article
     public function add(Request $request)
     {
-        // dd($request->input('cover_image'));
+        // dd($request->file('cover_image'));
         // dd($_FILES);
         $article = new Article;
         $article->id = strlen($request->input('id')) > 0 ? $request->input('id'): UploadHelper::uuid();

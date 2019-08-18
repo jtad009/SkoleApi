@@ -2,6 +2,9 @@
 
 
 use App\Http\Helper\UploadHelper;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
 class ArticleTest extends TestCase
 {
     private $uuid = null;
@@ -77,7 +80,8 @@ class ArticleTest extends TestCase
     public function testAddArticle()
     {
 
-
+        // Storage::fake('avatar');
+        // $profile = UploadedFile::fake()->create('a.png', 40);
         //Rejects unauthorised request
         $img  = new \Illuminate\Http\UploadedFile(public_path('uploads/israel.png'), 'israel.png', null, null, null, true);
 
@@ -89,7 +93,7 @@ class ArticleTest extends TestCase
             [
                 'title' => $title,
                 'slug' => str_replace(' ', '-', $title),
-                'cover_image' => $_FILES,
+                'cover_image' => $img,
                 'published' => 1,
                 'article' => str_random(20),
                 'category_id' => '1',
