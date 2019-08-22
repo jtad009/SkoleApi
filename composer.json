@@ -1,7 +1,7 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "name": "SkoleApi",
+    "description": "This is an api for the skole blog system",
+    "keywords": ["framework", "laravel", "lumen","skole","blogging service"],
     "license": "MIT",
     "type": "project",
     "require": {
