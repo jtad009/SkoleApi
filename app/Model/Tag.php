@@ -6,7 +6,7 @@ class Tag extends Model{
     protected $fillable =['tag'];
 
     public function articles(){
-        return $this->belongsToMany('App\Model\Article','article_tag','article_id','tag_id')->withTimestamps();;
+        return $this->belongsToMany('App\Model\Article','article_tag','tag_id','article_id')->withTimestamps();;
     }
 }
 

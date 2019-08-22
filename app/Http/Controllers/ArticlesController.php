@@ -102,7 +102,7 @@ class ArticlesController extends Controller
     public function view($id)
     {
         try {
-            $article = Article::findOrFail($id)->with('categories', 'users', 'comments', 'tags')->get();
+            $article = Article::findOrFail($id)->with('categories', 'users', 'comments', 'tags')->where('articles.id', $id)->get();
             // dd($id);
             return response()->json(ResponseBuilder::result(200, 'success', $article), 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {

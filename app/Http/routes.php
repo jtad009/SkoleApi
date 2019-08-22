@@ -11,9 +11,10 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    return $app->version();
+$app->get('/uploads/{link}', function () use ($app) {
+    echo public_path('uploads/blog/'.$link);
 });
+
 $app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers', 'middleware' => 'auth'], function () use ($app) {
     $app->post('articles/edit/{id}', 'ArticlesController@edit');
     $app->delete('articles/delete/{id}', 'ArticlesController@delete');

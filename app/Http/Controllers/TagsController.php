@@ -39,10 +39,11 @@ class TagsController extends Controller
     public function view($id){
         // dd($id);
         try{
-            $Tag =  Tag::findOrFail($id)->with('articles','articles.comments','articles.categories')->where('tags.id', $id)->get();
+            $tag =  Tag::findorFail($id)->with('articles','articles.comments','articles.categories')->where('tags.id', $id)->get();
+
         
-        if($Tag != null){
-            return ResponseBuilder::result(200,'Tags', $Tag);
+        if($tag != null){
+            return ResponseBuilder::result(200,'Tags', $tag);
         }
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) { 
         return response()->json(ResponseBuilder::result(404, 'Tag not found', $e->getMessage()), 404);

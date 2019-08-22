@@ -36,7 +36,7 @@ class CategoriesController extends Controller
 
     public function view($id){
         try{
-            $category =  Category::findOrFail($id)->with('articles','articles.tags','articles.comments')->where('id',$id)->get();
+            $category =  Category::findOrFail($id)->with('articles','articles.tags','articles.comments', 'articles.categories')->where('id',$id)->get();
         
         if($category != null){
             return response()->json( ResponseBuilder::result(200,'Categories', $category),  200);
